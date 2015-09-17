@@ -1,6 +1,6 @@
 import os
 import telegram
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
@@ -19,7 +19,7 @@ def send_telegram():
     if request.form.get('token') == APP_TOKEN:
         try:
             user, text = request.form['text'].split(',')
-            user = USERS[user]
+            user = USERS[user.lower()]
             bot.sendMessage(
                 chat_id=user,
                 text='{user}: {text}'.format(
@@ -35,10 +35,15 @@ def send_telegram():
     return 'Nope :|'
 
 
+@app.route('/users', methods=['GET'])
+def users():
+    return jsonify(users=USERS.keys())
+
+
 @app.route('/register', methods=['POST'])
 def register():
     try:
-        USERS[request.form['username']] = int(request.form['id'])
+        USERS[request.form['username'].lower()] = int(request.form['id'])
     except KeyError:
         return '', 400
     return '', 200
