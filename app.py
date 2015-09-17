@@ -38,7 +38,7 @@ def send_telegram():
 @app.route('/register', methods=['POST'])
 def register():
     try:
-        USERS[request.form['username']] = request.form['id']
+        USERS[request.form['username']] = int(request.form['id'])
     except KeyError:
         return '', 400
     return '', 200
