@@ -6,7 +6,11 @@ app = Flask(__name__)
 
 global bot
 bot = telegram.Bot(token=os.environ['TELEGRAM_TOKEN'])
-USERS = {'ogrecoxy': 94444131}
+USERS = {
+    key[len('TELEGRAM_USER_'):].lower(): int(val)
+    for key, val in os.environ.items()
+    if key.startswith('TELEGRAM_USER_')
+}
 APP_TOKEN = os.environ['SLACK_APP_TOKEN']
 
 
