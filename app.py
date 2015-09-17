@@ -20,8 +20,13 @@ def send_telegram():
         try:
             user, text = request.form['text'].split(',')
             user = USERS[user]
-            text = text.encode('utf-8')
-            bot.sendMessage(chat_id=user, text=text)
+            bot.sendMessage(
+                chat_id=user,
+                text='{user}: {text}'.format(
+                    user=request.form['user_name'],
+                    text=text
+                )
+            )
             return 'Sent!'
         except (ValueError) as e:
             return "Error - requires two values (user and text)"    
