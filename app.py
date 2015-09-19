@@ -96,7 +96,9 @@ def users():
 @app.route('/register', methods=['POST'])
 def register():
     try:
-        USERS[request.form['username'].lower()] = int(request.form['id'])
+        SQLHelper.users_to_db([
+            (request.form['username'].lower(), request.form['id'])
+        ])
     except KeyError:
         return '', 400
     return '', 200
