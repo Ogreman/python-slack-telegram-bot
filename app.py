@@ -15,6 +15,7 @@ USERS = [
 APP_TOKEN = os.environ['SLACK_APP_TOKEN']
 DB_LOCATION = os.getcwd() + '/s2t.db'
 USER_TABLE = 'Users'
+USER_URL = "https://telegram.me/{username}"
 
 
 class SQLHelper(object):
@@ -85,6 +86,22 @@ def send_telegram():
             return "Error - requires two values (user and text)"    
         except KeyError:
             return 'User not registered!'
+    return 'Nope :|'
+
+
+@app.route('/telegram-users', methods=['POST'])
+def telegram_users():
+    if request.form.get('token') == APP_TOKEN:
+        return '\n'.join(
+            [
+                "<{0}|{1}>"
+                .format(
+                    USER_URL.format(username=username),
+                    username
+                )
+                for username in SQLHelper.users_from_db().keys()
+            ]
+        ) or 'No users!'
     return 'Nope :|'
 
 
