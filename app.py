@@ -72,6 +72,8 @@ class SQLHelper(object):
 def send_telegram():
     if request.form.get('token') == APP_TOKEN:
         try:
+            if request.form['text'].strip() == 'users':
+                return telegram_users()
             user, text = request.form['text'].split(',')
             user = SQLHelper.users_from_db()[user.lower()]
             bot.sendMessage(
@@ -89,20 +91,17 @@ def send_telegram():
     return 'Nope :|'
 
 
-@app.route('/telegram-users', methods=['POST'])
 def telegram_users():
-    if request.form.get('token') == APP_TOKEN:
-        return '\n'.join(
-            [
-                "<{0}|{1}>"
-                .format(
-                    USER_URL.format(username=username),
-                    username
-                )
-                for username in SQLHelper.users_from_db().keys()
-            ]
-        ) or 'No users!'
-    return 'Nope :|'
+    return '\n'.join(
+        [
+            "<{0}|{1}>"
+            .format(
+                USER_URL.format(username=username),
+                username
+            )
+            for username in SQLHelper.users_from_db().keys()
+        ]
+    ) or 'No users!'
 
 
 @app.route('/users', methods=['GET'])
