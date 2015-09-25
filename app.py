@@ -127,6 +127,7 @@ def index():
 
 if __name__ == "__main__":
     SQLHelper.users_to_db(USERS)
-    app.run(debug=os.environ.get('GIG_DEBUG', False))
-
-
+    if os.environ.get('S2T_PRODUCTION'):
+        app.run(host='0.0.0.0', port=82, debug=os.environ.get('GIG_DEBUG', False))
+    else:
+        app.run(debug=os.environ.get('GIG_DEBUG', True))

@@ -76,6 +76,11 @@ def scppa():
     local("scp %s raffers:/home/james/projects/s2t/" % postactivate)
 
 
+def prod():
+    with cd(project_path):
+        run("echo export S2T_PRODUCTION=True >> postactivate")
+
+
 def installdeps():
     with settings(warn_only=True):
         with cd(project_path):
@@ -83,7 +88,6 @@ def installdeps():
 
 
 def new():
-    kill()
     mkdir()
     initgit()
     prepare(stash=False)
@@ -91,6 +95,7 @@ def new():
     finalise(stash=False)
     clean()
     scppa()
+    prod()
     installdeps()
     start()
 
